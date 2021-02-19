@@ -474,7 +474,7 @@ static  int key_loadMenu(int *c)
 				case SDLK_s:
 				case SDLK_DOWN: down=1; break;
 				case SDLK_c:
-				#ifdef MIYOO
+				#ifdef MIYOO_MODE
 				case SDLK_LSHIFT: hit2=1; break;
 				case SDLK_x:
 				case SDLK_SPACE:
@@ -509,7 +509,7 @@ static  int key_loadMenu(int *c)
 						 text_dir_num_files_index=0;
 						 break;
 				case SDLK_q:
-				#ifdef MIYOO
+				#ifdef MIYOO_MODE
 				case SDLK_LALT: hit0=1; break;
 				#else
 				case SDLK_LALT: hit1=1; break;
