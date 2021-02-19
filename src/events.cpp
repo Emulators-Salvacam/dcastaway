@@ -97,7 +97,11 @@ static void show_mhz(void)
 {
     extern int dingoo_get_clock(void);
     char n[40];
+    #ifdef MIYOO_MODE
+    sprintf((char *)&n[0],"Miyoo at %iMHz",dingoo_get_clock());
+    #else
     sprintf((char *)&n[0],"Dingoo at %iMHz",dingoo_get_clock());
+    #endif
     set_message((char *)&n[0], 50);
 }
 
@@ -747,7 +751,14 @@ void do_events (void)
 		break;
 	    }
 	    else
+
+	    //if (event.key.keysym.sym==SDLK_LCTRL || event.key.keysym.sym==SDLK_RCTRL)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_LALT || event.key.keysym.sym==SDLK_RALT)
+	    #else
 	    if (event.key.keysym.sym==SDLK_LCTRL || event.key.keysym.sym==SDLK_RCTRL)
+	    #endif
 	    {
 		if (escape_pressed)
 			inc_dingoo_mhz();
@@ -761,7 +772,13 @@ void do_events (void)
 		break;
 	    }
 	    else
+	    //if (event.key.keysym.sym==SDLK_LALT || event.key.keysym.sym==SDLK_RALT)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_LCTRL) // || event.key.keysym.sym==SDLK_RCTRL)
+	    #else
 	    if (event.key.keysym.sym==SDLK_LALT || event.key.keysym.sym==SDLK_RALT)
+	    #endif
 	    {
 		if (escape_pressed)
 			dec_dingoo_mhz();
@@ -780,14 +797,37 @@ void do_events (void)
 		break;
 	    }
 	    else
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_SPACE)
+	    #else
 	    if (event.key.keysym.sym==SDLK_LSHIFT || event.key.keysym.sym==SDLK_RSHIFT)
+	    #endif
 	    {
 		if (escape_pressed)
 		{
+			#ifndef MIYOO_MODE
 			if (emulated_mouse)
+			{
 				dec_mouse_speed();
+			}
 			else
+			{
+			#endif
+				#ifdef MIYOO_MODE
+				//show mouse					
+				if (!vkbd_mode)
+				{
+					extern unsigned short render_pal16_copy0;
+					emulated_mouse=~emulated_mouse;
+					render_pal16_copy0--;
+				}
+				#else
 				dec_n_savestate();
+				#endif
+
+			#ifndef MIYOO_MODE
+			}
+			#endif
 		}
 		else
 #ifndef NO_VKBD
@@ -803,14 +843,59 @@ void do_events (void)
 // Si no pulsa el boton SHITF de ST
 	    }
 	    else
+	    //if (event.key.keysym.sym==SDLK_SPACE)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_LSHIFT || event.key.keysym.sym==SDLK_RSHIFT)
+	    #else
 	    if (event.key.keysym.sym==SDLK_SPACE)
+	    #endif
 	    {
 		if (escape_pressed)
 		{
 			if (emulated_mouse)
+			{
 				inc_mouse_speed();
+			}
 			else
+			{
+				#ifdef MIYOO_MODE
+				//inc_n_savestate();
+				//show keyboard
+				if ((!nowSuperThrottle)
+#ifndef NO_VKBD
+				&&(!vkbd_mode)
+#endif
+			   )
+			{
+				if (!emulated_mouse)
+				{
+					render_force_background();
+					render_up_screen();
+#ifndef NO_VKBD
+					vkbd_mode=1;
+					vkbd_redraw();
+#endif
+				}
+				else
+				{
+    					if (emulated_mouse_speed>=16)
+						emulated_mouse_speed=0;
+					inc_mouse_speed();
+				}
+			}
+			else
+			if (vkbd_mode)
+			{
+				render_force_background();
+				render_down_screen();
+				vkbd_mode=0;
+				goingSuperThrottle=0;
+			}
+				#else
 				inc_n_savestate();
+				#endif
+			}
 			break;
 		}
 		else
@@ -937,7 +1022,71 @@ void do_events (void)
 			}
 		}
 		break;
-	    }
+	    }	    
+// 	    #ifdef MIYOO_MODE
+// 	    else
+// 	    if (event.key.keysym.sym==SDLK_SPACE)
+// 	    {
+// 		//space_pressed=1;
+// 		if (return_pressed)
+// 		{
+// 			if (!vkbd_mode)
+// 			{
+// 				extern unsigned short render_pal16_copy0;
+// 				emulated_mouse=~emulated_mouse;
+// 				render_pal16_copy0--;
+// 			}
+// 		}
+// 		break;
+// 	    }
+// 	    else
+// 	    if (event.key.keysym.sym==SDLK_LSHIFT)
+// 	    {
+// 		backspace_pressed=1;
+// 		if (escape_pressed)
+// 		{
+// 			if ((!nowSuperThrottle)
+// #ifndef NO_VKBD
+// 				&&(!vkbd_mode)
+// #endif
+// 			   )
+// 			{
+// 				if (!emulated_mouse)
+// 				{
+// 					render_force_background();
+// 					render_up_screen();
+// #ifndef NO_VKBD
+// 					vkbd_mode=1;
+// 					vkbd_redraw();
+// #endif
+// 				}
+// 				else
+// 				{
+//     					if (emulated_mouse_speed>=16)
+// 						emulated_mouse_speed=0;
+// 					inc_mouse_speed();
+// 				}
+// 			}
+// 			else
+// 			if (vkbd_mode)
+// 			{
+// 				render_force_background();
+// 				render_down_screen();
+// 				vkbd_mode=0;
+// 				goingSuperThrottle=0;
+// 			}
+// 		}
+// 		break;
+// 	    }
+ 	    #ifdef MIYOO_MODE
+ 	    else
+ 	    if (event.key.keysym.sym==SDLK_RCTRL)
+ 	    {
+ 			goMenu();
+ 			return_pressed=escape_pressed=tab_pressed=backspace_pressed=0;
+ 		break;
+ 	    }
+ 	    #endif
 	    else
 	    if (event.key.keysym.sym==SDLK_RETURN)
 	    {
@@ -1077,7 +1226,14 @@ void do_events (void)
 		break;
 	    }
 	    else
+
+	    //if (event.key.keysym.sym==SDLK_LCTRL || event.key.keysym.sym==SDLK_RCTRL)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_LALT || event.key.keysym.sym==SDLK_RALT)
+	    #else
 	    if (event.key.keysym.sym==SDLK_LCTRL || event.key.keysym.sym==SDLK_RCTRL)
+	    #endif
 	    {
 		if (escape_pressed)
 			break;
@@ -1093,7 +1249,13 @@ void do_events (void)
 		    
 #endif
 #ifdef EMULATED_JOYSTICK
+	    //if (event.key.keysym.sym==SDLK_SPACE)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_LSHIFT || event.key.keysym.sym==SDLK_RSHIFT)
+	    #else
 	    if (event.key.keysym.sym==SDLK_SPACE)
+	    #endif
 	    {
 		if (escape_pressed)
 			break;
@@ -1117,7 +1279,14 @@ void do_events (void)
 #endif
 	    }
 	    else
+
+	    //if (event.key.keysym.sym==SDLK_LALT || event.key.keysym.sym==SDLK_RALT)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_LCTRL) // || event.key.keysym.sym==SDLK_RCTRL)
+	    #else
 	    if (event.key.keysym.sym==SDLK_LALT || event.key.keysym.sym==SDLK_RALT)
+	    #endif
 	    {
 		if (escape_pressed)
 			break;
@@ -1133,7 +1302,13 @@ void do_events (void)
 		break;
 	    }
 	    else
+	    //if (event.key.keysym.sym==SDLK_LSHIFT || event.key.keysym.sym==SDLK_RSHIFT)
+
+		#ifdef MIYOO_MODE
+	    if (event.key.keysym.sym==SDLK_SPACE)
+	    #else
 	    if (event.key.keysym.sym==SDLK_LSHIFT || event.key.keysym.sym==SDLK_RSHIFT)
+	    #endif
 	    {
 		if (escape_pressed)
 			break;

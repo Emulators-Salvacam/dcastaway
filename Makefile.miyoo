@@ -27,7 +27,7 @@ PROG   = $(NAME)
 
 all: $(PROG)
 
-DEFAULT_CFLAGS = -I/opt/miyoo/include -I/opt/miyoo/usr/include -D_GNU_SOURCE=1 -D_REENTRANT -DDINGUX -DDINGOO
+DEFAULT_CFLAGS = -I/opt/miyoo/include -I/opt/miyoo/usr/include -D_GNU_SOURCE=1 -D_REENTRANT -DMIYOO_MODE -DDINGOO
 
 DEFAULT_CFLAGS += $(shell $(SDL_CONFIG) --cflags)
 

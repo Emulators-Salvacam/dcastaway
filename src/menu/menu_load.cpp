@@ -474,6 +474,15 @@ static  int key_loadMenu(int *c)
 				case SDLK_s:
 				case SDLK_DOWN: down=1; break;
 				case SDLK_c:
+				#ifdef MIYOO
+				case SDLK_LSHIFT: hit2=1; break;
+				case SDLK_x:
+				case SDLK_SPACE:
+				case SDLK_z:
+				case SDLK_RETURN:
+				case SDLK_e:
+				case SDLK_LCTRL: hit1=1; break;
+				#else
 				case SDLK_LSHIFT:
 				case SDLK_x:
 				case SDLK_SPACE: hit2=1; break;
@@ -481,6 +490,7 @@ static  int key_loadMenu(int *c)
 				case SDLK_RETURN:
 				case SDLK_e:
 				case SDLK_LCTRL: hit0=1; break;
+				#endif
 				case SDLK_1:
 #ifdef DREAMCAST
 				case SDLK_TAB:
@@ -499,7 +509,11 @@ static  int key_loadMenu(int *c)
 						 text_dir_num_files_index=0;
 						 break;
 				case SDLK_q:
+				#ifdef MIYOO
+				case SDLK_LALT: hit0=1; break;
+				#else
 				case SDLK_LALT: hit1=1; break;
+				#endif
 			}
 			if ((hit0)||(hit2))
 			{

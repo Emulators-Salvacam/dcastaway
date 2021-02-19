@@ -254,7 +254,11 @@ static  int key_mainMenu(int *cp)
 				case SDLK_z:
 				case SDLK_RETURN:
 				case SDLK_e:
+				#ifdef MIYOO_MODE
+				case SDLK_LCTRL: hit1=1; break;
+				#else
 				case SDLK_LCTRL: hit0=1; break;
+				#endif
 #ifdef DREAMCAST
 				case SDLK_c:
 				case SDLK_LSHIFT: hit3=1; break;
@@ -265,18 +269,28 @@ static  int key_mainMenu(int *cp)
 				case SDLK_1:
 				case SDLK_TAB: hit5=1; break;
 #else
-				//MIYOO
 				case SDLK_c:
+				//MIYOO
+				#ifdef MIYOO_MODE
+				case SDLK_LSHIFT: hit3=1; break;
+				case SDLK_x:
+				case SDLK_SPACE: hit4=1; break;
+				#else
 				case SDLK_LSHIFT: hit4=1; break;
 				case SDLK_x:
 				case SDLK_SPACE: hit3=1; break;
+				#endif
 				case SDLK_2:
 				case SDLK_BACKSPACE: hit5=1; break;
 				case SDLK_1:
 				case SDLK_TAB: hit2=1; break;
 #endif
 				case SDLK_q:
+				#ifdef MIYOO_MODE
+				case SDLK_LALT: hit0=1; break;
+				#else
 				case SDLK_LALT: hit1=1; break;
+				#endif
 				case SDLK_F12: TV_ToggleFullScreen(screen); break;
 			}
 			if (hit1)

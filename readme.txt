@@ -68,8 +68,8 @@ SELECT + LEFT: Volume down.
 SELECT + RIGHT: Volume up.
 SELECT + A: Increase Dingoo overclocking
 SELECT + B: Decrease Dingoo overclocking
-SELECT + X: Move up to next save state
-SELECT + Y: Move down to next save state
+SELECT + X: Move up to next save state (in MIYOO: Virtual keyboard)
+SELECT + Y: Move down to next save state (in MIYOO: Switches between joystick and mouse control)
 START: SuperThrottle on/off
 
 ------------------------------------

@@ -173,7 +173,11 @@ static inline int key_saveMenu(int *cp)
 				case SDLK_z:
 				case SDLK_RETURN:
 				case SDLK_e:
+				#ifdef MIYOO_MODE
+				case SDLK_LCTRL: hit1=1; break;
+				#else
 				case SDLK_LCTRL: hit0=1; break;
+				#endif
 				case SDLK_2:
 				case SDLK_BACKSPACE: hit2=1; break;
 				case SDLK_1:
@@ -190,7 +194,11 @@ static inline int key_saveMenu(int *cp)
 				case SDLK_LSHIFT: hit4=1; break;
 #endif
 				case SDLK_q:
+				#ifdef MIYOO_MODE
+				case SDLK_LALT: hit0=1; break;
+				#else
 				case SDLK_LALT: hit1=1; break;
+				#endif
 				case SDLK_F12: TV_ToggleFullScreen(screen); break;
 			}
 			if (hit1)
